@@ -8,7 +8,6 @@ void main() {
 class DashboardApp extends StatelessWidget {
   const DashboardApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
