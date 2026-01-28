@@ -13,7 +13,8 @@ class CobotControlPanel extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text("Cobot Arm Toggling"),
+              // Replaced for testing without cobot.
+              /*Text("Cobot Arm Toggling"),
               Row(
                 children: [
                   TextButton(onPressed: () {}, child: Text("Toggle Cobot 0")),
@@ -33,7 +34,9 @@ class CobotControlPanel extends StatelessWidget {
                   Text("Cobot 1 Speed"),
                   Slider(value: 0.5, onChanged: (_) {}),
                 ],
-              ),
+              ),*/
+              TextButton(onPressed: () {}, child: Text("Start Clock")),
+              TextButton(onPressed: () {}, child: Text("Stop Clock")),
             ],
           ),
         ),
