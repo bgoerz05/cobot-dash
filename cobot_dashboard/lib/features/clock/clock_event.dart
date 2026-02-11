@@ -12,3 +12,5 @@ class StopEvent extends ClockEvent {}
 class TickWhiteEvent extends ClockEvent {}
 
 class TickBlackEvent extends ClockEvent {}
+
+class SwitchPlayerEvent extends ClockEvent {}

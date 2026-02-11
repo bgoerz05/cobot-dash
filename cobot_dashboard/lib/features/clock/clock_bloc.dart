@@ -6,7 +6,8 @@ import 'package:cobot_dashboard/features/clock/clock_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ClockBloc extends Bloc<ClockEvent, ClockState> {
-  late StreamSubscription<bool>? _statusListener;
+  late StreamSubscription<bool>? _starterListener;
+  late StreamSubscription<int>? _playerSwitcher;
   Timer? clockUpdater;
 
   ClockBloc() : super(ClockState()) {
@@ -14,17 +15,25 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
     on<StopEvent>((event, emit) => _stopClock(event, emit));
     on<TickWhiteEvent>((event, emit) => _tickWhite(event, emit));
     on<TickBlackEvent>((event, emit) => _tickBlack(event, emit));
+    on<SwitchPlayerEvent>((event, emit) => _switchPlayer(event, emit));
     _init();
   }
 
   void _init() {
-    _statusListener = ClockRepository.clockRepositoryInstance.statusStream
+    _starterListener = ClockRepository
+        .clockRepositoryInstance
+        .clockStarterStream
         .listen((final value) {
           if (value) {
             add(StartEvent());
           } else {
             add(StopEvent());
           }
+        });
+
+    _playerSwitcher = ClockRepository.clockRepositoryInstance.playerUpdateStream
+        .listen((final _) {
+          add(SwitchPlayerEvent());
         });
   }
 
@@ -42,14 +51,16 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
   }
 
   void _stopClock(StopEvent event, Emitter<ClockState> emit) {
-    clockUpdater?.cancel;
+    clockUpdater?.cancel();
     return emit(state.copyWith(running: false));
   }
 
   @override
   Future<void> close() async {
-    await _statusListener?.cancel();
-    _statusListener = null;
+    await _starterListener?.cancel();
+    _starterListener = null;
+    await _playerSwitcher?.cancel();
+    _playerSwitcher = null;
 
     return super.close();
   }
@@ -64,5 +75,9 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
     return emit(
       state.copyWith(blackTimeLeft: state.blackTimeLeft - Duration(seconds: 1)),
     );
+  }
+
+  void _switchPlayer(SwitchPlayerEvent event, Emitter<ClockState> emit) {
+    return emit(state.copyWith(whiteToPlay: !state.whiteToPlay));
   }
 }

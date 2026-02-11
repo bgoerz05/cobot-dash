@@ -50,7 +50,12 @@ class CobotControlPanel extends StatelessWidget {
                 },
                 child: Text("Stop Clock"),
               ),
-              TextButton(onPressed: () {}, child: Text("Switch Player")),
+              TextButton(
+                onPressed: () {
+                  ClockRepository.clockRepositoryInstance.switchPlayer();
+                },
+                child: Text("Switch Player"),
+              ),
             ],
           ),
         ),
