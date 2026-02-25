@@ -27,16 +27,19 @@ class BoardPanel extends StatelessWidget {
                       size: min(constraints.maxHeight, constraints.maxWidth),
                       orientation: Side.white,
                       fen: state.fen,
-                      game: GameData(
-                        playerSide: PlayerSide.both,
-                        sideToMove: state.sideToPlay,
-                        validMoves: state.validMoves,
-                        promotionMove: state.promotionMove,
-                        onMove: (NormalMove move, {bool? isDrop}) => context
-                            .read<BoardBloc>()
-                            .add(MoveEvent(move: move)),
-                        onPromotionSelection: (_) {},
-                      ),
+                      game: state.active
+                          ? GameData(
+                              playerSide: PlayerSide.both,
+                              sideToMove: state.sideToPlay,
+                              validMoves: state.validMoves,
+                              promotionMove: state.promotionMove,
+                              onMove: (NormalMove move, {bool? isDrop}) =>
+                                  context.read<BoardBloc>().add(
+                                    MoveEvent(move: move),
+                                  ),
+                              onPromotionSelection: (_) {},
+                            )
+                          : null,
                     );
                   },
                 ),

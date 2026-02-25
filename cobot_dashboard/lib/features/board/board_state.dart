@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
 class BoardState extends Equatable {
+  final bool active;
   final Position position;
   final String fen;
   final ValidMoves validMoves;
@@ -15,6 +16,7 @@ class BoardState extends Equatable {
     this.validMoves = const IMap.empty(),
     this.promotionMove,
     this.sideToPlay = Side.white,
+    this.active = false,
   });
 
   BoardState copyWith({
@@ -23,6 +25,7 @@ class BoardState extends Equatable {
     final ValidMoves? validMoves,
     final NormalMove? promotionMove,
     final Side? sideToPlay,
+    final bool? active,
   }) {
     return BoardState(
       position: position ?? this.position,
@@ -30,6 +33,7 @@ class BoardState extends Equatable {
       validMoves: validMoves ?? this.validMoves,
       promotionMove: promotionMove ?? this.promotionMove,
       sideToPlay: sideToPlay ?? this.sideToPlay,
+      active: active ?? this.active,
     );
   }
 
@@ -40,5 +44,6 @@ class BoardState extends Equatable {
     validMoves,
     promotionMove,
     sideToPlay,
+    active,
   ];
 }

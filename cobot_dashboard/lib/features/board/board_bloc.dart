@@ -7,6 +7,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   BoardBloc() : super(BoardState()) {
     on<MoveEvent>((event, emit) => _playMove(event, emit));
     on<CheckMovesEvent>((event, emit) => _checkMoves(event, emit));
+    on<StartBoardEvent>((event, emit) => _startGame(event, emit));
 
     _init();
   }
@@ -27,6 +28,18 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         fen: newPosition.fen,
         validMoves: makeLegalMoves(newPosition),
         sideToPlay: state.sideToPlay == Side.white ? Side.black : Side.white,
+      ),
+    );
+  }
+
+  void _startGame(StartBoardEvent event, Emitter<BoardState> emit) {
+    emit(
+      state.copyWith(
+        active: true,
+        position: Chess.initial,
+        fen: Chess.initial.fen,
+        sideToPlay: Side.white,
+        validMoves: makeLegalMoves(Chess.initial),
       ),
     );
   }

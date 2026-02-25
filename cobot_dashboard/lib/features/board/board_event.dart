@@ -10,6 +10,8 @@ class BoardEvent extends Equatable {
 
 class CheckMovesEvent extends BoardEvent {}
 
+class StartBoardEvent extends BoardEvent {}
+
 class MoveEvent extends BoardEvent {
   final Move move;
   const MoveEvent({required this.move});
