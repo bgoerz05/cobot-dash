@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cobot_dashboard/features/board/board_event.dart';
 import 'package:cobot_dashboard/features/board/board_state.dart';
 import 'package:cobot_dashboard/features/clock/clock_repo.dart';
+import 'package:cobot_dashboard/features/move_log/move_log_repo.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,6 +36,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   void _playMove(MoveEvent event, Emitter<BoardState> emit) {
     Position newPosition = state.position.play(event.move);
     ClockRepository.clockRepositoryInstance.switchPlayer();
+    MoveLogRepository.moveLogRepoInstance.addMove(event.move);
     emit(
       state.copyWith(
         position: newPosition,
