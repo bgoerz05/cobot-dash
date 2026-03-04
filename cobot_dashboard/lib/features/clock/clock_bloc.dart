@@ -55,16 +55,6 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
     return emit(state.copyWith(running: false));
   }
 
-  @override
-  Future<void> close() async {
-    await _starterListener?.cancel();
-    _starterListener = null;
-    await _playerSwitcher?.cancel();
-    _playerSwitcher = null;
-
-    return super.close();
-  }
-
   void _tickWhite(TickWhiteEvent event, Emitter<ClockState> emit) {
     return emit(
       state.copyWith(whiteTimeLeft: state.whiteTimeLeft - Duration(seconds: 1)),
@@ -79,5 +69,15 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
 
   void _switchPlayer(SwitchPlayerEvent event, Emitter<ClockState> emit) {
     return emit(state.copyWith(whiteToPlay: !state.whiteToPlay));
+  }
+
+  @override
+  Future<void> close() async {
+    await _starterListener?.cancel();
+    _starterListener = null;
+    await _playerSwitcher?.cancel();
+    _playerSwitcher = null;
+
+    return super.close();
   }
 }
