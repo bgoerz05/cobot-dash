@@ -20,7 +20,12 @@ class ClockPanel extends StatelessWidget {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        border: BoxBorder.all(color: Colors.yellow, width: 8),
+                        border: BoxBorder.all(
+                          color: state.whiteToPlay
+                              ? Colors.yellow
+                              : Colors.white,
+                          width: 8,
+                        ),
                         color: Colors.white,
                       ),
                       child: Center(
@@ -32,10 +37,20 @@ class ClockPanel extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Center(
-                      child: Text(
-                        getFormattedTime(state.blackTimeLeft),
-                        style: TextStyle(color: Colors.white, fontSize: 44),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: BoxBorder.all(
+                          color: state.whiteToPlay
+                              ? Colors.black
+                              : Colors.yellow,
+                          width: 8,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          getFormattedTime(state.blackTimeLeft),
+                          style: TextStyle(color: Colors.white, fontSize: 44),
+                        ),
                       ),
                     ),
                   ),

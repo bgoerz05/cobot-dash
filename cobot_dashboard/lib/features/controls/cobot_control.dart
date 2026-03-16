@@ -1,3 +1,4 @@
+import 'package:cobot_dashboard/features/clock/clock_repo.dart';
 import 'package:flutter/material.dart';
 
 class CobotControlPanel extends StatelessWidget {
@@ -13,6 +14,8 @@ class CobotControlPanel extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              // Replaced for testing without cobot.
+              /*
               Text("Cobot Arm Toggling"),
               Row(
                 children: [
@@ -33,6 +36,25 @@ class CobotControlPanel extends StatelessWidget {
                   Text("Cobot 1 Speed"),
                   Slider(value: 0.5, onChanged: (_) {}),
                 ],
+              ), 
+              */
+              TextButton(
+                onPressed: () {
+                  ClockRepository.clockRepositoryInstance.start();
+                },
+                child: Text("Start Clock"),
+              ),
+              TextButton(
+                onPressed: () {
+                  ClockRepository.clockRepositoryInstance.stop();
+                },
+                child: Text("Stop Clock"),
+              ),
+              TextButton(
+                onPressed: () {
+                  ClockRepository.clockRepositoryInstance.switchPlayer();
+                },
+                child: Text("Switch Player"),
               ),
             ],
           ),
