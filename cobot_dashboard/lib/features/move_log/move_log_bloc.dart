@@ -41,7 +41,7 @@ class MoveLogBloc extends Bloc<MoveLogEvent, MoveLogState> {
 
   void _addMove(event, emit) {
     String moves = state.moves;
-    moves += event.move.uci;
+    moves += event.move.uci + " ";
     emit(state.copyWith(moves: moves));
   }
 

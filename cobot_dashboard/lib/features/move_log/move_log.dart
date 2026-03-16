@@ -15,7 +15,7 @@ class MoveLogPanel extends StatelessWidget {
           create: (context) => MoveLogBloc(),
           child: BlocBuilder<MoveLogBloc, MoveLogState>(
             builder: (context, state) {
-              return Card(child: Text(state.moves));
+              return Text(state.moves, style: TextStyle(color: Colors.white));
             },
           ),
         ),
