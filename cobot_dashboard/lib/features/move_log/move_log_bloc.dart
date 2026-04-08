@@ -35,13 +35,13 @@ class MoveLogBloc extends Bloc<MoveLogEvent, MoveLogState> {
     });
   }
 
-  void _clearLog(event, emit) {
+  void _clearLog(StartLogEvent event, Emitter emit) {
     emit(state.copyWith(moves: ''));
   }
 
-  void _addMove(event, emit) {
+  void _addMove(AddMoveEvent event, Emitter emit) {
     String moves = state.moves;
-    moves += event.move.uci + " ";
+    moves += "${event.move.uci} ";
     emit(state.copyWith(moves: moves));
   }
 

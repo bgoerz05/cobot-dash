@@ -9,11 +9,12 @@ class CobotControlPanel extends StatelessWidget {
     return Card(
       child: Scaffold(
         backgroundColor: Theme.of(context).cardColor,
-        appBar: AppBar(title: Text("Cobot Control Panel")),
+        appBar: AppBar(title: Text("Control Panel")),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              // Original UI Controls.
               // Replaced for testing without cobot.
               /*
               Text("Cobot Arm Toggling"),
