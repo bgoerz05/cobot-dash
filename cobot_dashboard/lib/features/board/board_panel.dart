@@ -33,7 +33,7 @@ class BoardPanel extends StatelessWidget {
                               sideToMove: state.sideToPlay,
                               validMoves: state.validMoves,
                               promotionMove: state.promotionMove,
-                              onMove: (NormalMove move, {bool? isDrop}) =>
+                              onMove: (Move move, {bool? viaDragAndDrop}) =>
                                   context.read<BoardBloc>().add(
                                     MoveEvent(move: move),
                                   ),
