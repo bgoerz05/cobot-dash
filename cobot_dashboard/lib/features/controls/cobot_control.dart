@@ -1,8 +1,11 @@
 import 'package:cobot_dashboard/features/clock/clock_repo.dart';
+import 'package:cobot_dashboard/services/websocket_service.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class CobotControlPanel extends StatelessWidget {
-  const CobotControlPanel({super.key});
+  CobotControlPanel({super.key});
+  final WebSocketChannel channel = WebsocketService.channel;
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +45,16 @@ class CobotControlPanel extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   ClockRepository.clockRepositoryInstance.start();
+                  channel.sink.add('Start Game');
                 },
-                child: Text("Start Clock"),
+                child: Text("Start Game"),
               ),
               TextButton(
                 onPressed: () {
                   ClockRepository.clockRepositoryInstance.stop();
+                  channel.sink.add('Stop Game');
                 },
-                child: Text("Stop Clock"),
+                child: Text("Stop Game"),
               ),
               TextButton(
                 onPressed: () {
@@ -57,6 +62,22 @@ class CobotControlPanel extends StatelessWidget {
                 },
                 child: Text("Switch Player"),
               ),
+              // Card for debugging Websocket
+              Card(
+                child: Column(
+                  children: [
+                    Text("FOR DEBUGGING"),
+                    Row(
+                      children: [
+                        Text('Websocket Response: '),
+                        StreamBuilder(stream: channel.stream, builder: (context, snapshot) {
+                          return Text(snapshot.hasData ? '${snapshot.data}' : '');
+                        }),
+                      ],
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
