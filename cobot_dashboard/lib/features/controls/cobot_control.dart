@@ -1,4 +1,5 @@
 import 'package:cobot_dashboard/features/clock/clock_repo.dart';
+import 'package:cobot_dashboard/features/controls/control_repo.dart';
 import 'package:cobot_dashboard/services/websocket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -70,14 +71,19 @@ class CobotControlPanel extends StatelessWidget {
                     Row(
                       children: [
                         Text('Websocket Response: '),
-                        StreamBuilder(stream: channel.stream, builder: (context, snapshot) {
-                          return Text(snapshot.hasData ? '${snapshot.data}' : '');
-                        }),
+                        StreamBuilder(
+                          stream: ControlRepo.controlRepoInstance.channelStream,
+                          builder: (context, snapshot) {
+                            return Text(
+                              snapshot.hasData ? '${snapshot.data}' : '',
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

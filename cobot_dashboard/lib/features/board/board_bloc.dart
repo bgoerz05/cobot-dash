@@ -3,17 +3,22 @@ import 'dart:async';
 import 'package:cobot_dashboard/features/board/board_event.dart';
 import 'package:cobot_dashboard/features/board/board_state.dart';
 import 'package:cobot_dashboard/features/clock/clock_repo.dart';
+import 'package:cobot_dashboard/features/controls/control_repo.dart';
 import 'package:cobot_dashboard/features/move_log/move_log_repo.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
   late StreamSubscription<bool>? _starterListener;
+  late StreamSubscription? _socketListener;
+
+  RegExp fenDetector = RegExp('.*/.*/.*/.*/.*/.*/.*/.*/');
 
   BoardBloc() : super(BoardState()) {
     on<MoveEvent>((event, emit) => _playMove(event, emit));
     on<CheckMovesEvent>((event, emit) => _checkMoves(event, emit));
     on<StartBoardEvent>((event, emit) => _startGame(event, emit));
+    on<FenEvent>((event, emit) => _updateFen(event, emit));
 
     _init();
   }
@@ -27,6 +32,14 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
             add(StartBoardEvent());
           }
         });
+
+    _socketListener = ControlRepo.controlRepoInstance.channelStream.listen((
+      final value,
+    ) {
+      if (fenDetector.hasMatch(value)) {
+        add(FenEvent(fen: value));
+      }
+    });
   }
 
   void _checkMoves(CheckMovesEvent event, Emitter<BoardState> emit) {
@@ -59,10 +72,17 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     );
   }
 
+  void _updateFen(FenEvent event, Emitter<BoardState> emit) {
+    Position newPosition = Chess.fromSetup(Setup.parseFen(event.fen));
+    emit(state.copyWith(position: newPosition, fen: event.fen));
+  }
+
   @override
   Future<void> close() async {
     await _starterListener?.cancel();
     _starterListener = null;
+    await _socketListener?.cancel();
+    _socketListener = null;
 
     return super.close();
   }

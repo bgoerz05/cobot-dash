@@ -19,3 +19,11 @@ class MoveEvent extends BoardEvent {
   @override
   List<Object> get props => [move];
 }
+
+class FenEvent extends BoardEvent {
+  final String fen;
+  const FenEvent({required this.fen});
+
+  @override
+  List<Object> get props => [fen];
+}
