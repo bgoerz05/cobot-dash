@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:cobot_dashboard/services/websocket_service.dart';
+import 'package:logging/logging.dart';
 
 class ControlRepo {
+  final log = Logger('Control Repo');
+
   late StreamSubscription? _socketListener;
 
   static ControlRepo? _controlRepoInstance;
   ControlRepo._() {
     _socketListener = WebsocketService.channel.stream.listen((final value) {
       addData(value);
+      log.fine('Data recieved - $value');
     });
   }
 

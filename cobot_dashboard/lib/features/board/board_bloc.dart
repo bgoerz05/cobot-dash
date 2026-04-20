@@ -7,12 +7,17 @@ import 'package:cobot_dashboard/features/controls/control_repo.dart';
 import 'package:cobot_dashboard/features/move_log/move_log_repo.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
+  final log = Logger('Board Bloc');
+
   late StreamSubscription<bool>? _starterListener;
   late StreamSubscription? _socketListener;
 
-  RegExp fenDetector = RegExp('.*/.*/.*/.*/.*/.*/.*/.*/');
+  RegExp fenDetector = RegExp(
+    r'\w{1,8}/\w{1,8}/\w{1,8}/\w{1,8}/\w{1,8}/\w{1,8}/\w{1,8}/\w{1,8}',
+  );
 
   BoardBloc() : super(BoardState()) {
     on<MoveEvent>((event, emit) => _playMove(event, emit));
@@ -70,11 +75,16 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         validMoves: makeLegalMoves(Chess.initial),
       ),
     );
+    log.info('Game started');
   }
 
   void _updateFen(FenEvent event, Emitter<BoardState> emit) {
-    Position newPosition = Chess.fromSetup(Setup.parseFen(event.fen));
-    emit(state.copyWith(position: newPosition, fen: event.fen));
+    try {
+      Position newPosition = Chess.fromSetup(Setup.parseFen(event.fen));
+      emit(state.copyWith(position: newPosition, fen: event.fen));
+    } on PositionSetupException {
+      log.shout('Invalid FEN string recieved!');
+    }
   }
 
   @override

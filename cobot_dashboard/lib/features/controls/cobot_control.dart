@@ -68,6 +68,12 @@ class CobotControlPanel extends StatelessWidget {
                 child: Column(
                   children: [
                     Text("FOR DEBUGGING"),
+                    TextField(
+                      onSubmitted: (value) => channel.sink.add(value),
+                      decoration: InputDecoration(
+                        labelText: 'Send to Channel.',
+                      ),
+                    ),
                     Row(
                       children: [
                         Text('Websocket Response: '),
