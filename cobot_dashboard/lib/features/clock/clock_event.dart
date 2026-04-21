@@ -14,3 +14,20 @@ class TickWhiteEvent extends ClockEvent {}
 class TickBlackEvent extends ClockEvent {}
 
 class SwitchPlayerEvent extends ClockEvent {}
+
+class SyncTimeEvent extends ClockEvent {
+  final Duration whiteTimeLeft;
+  final Duration blackTimeLeft;
+  final bool whiteToPlay;
+  final bool running;
+
+  SyncTimeEvent({
+    required this.whiteTimeLeft,
+    required this.blackTimeLeft,
+    required this.whiteToPlay,
+    required this.running,
+  });
+
+  @override
+  List<Object?> get props => [whiteTimeLeft, blackTimeLeft, whiteToPlay, running];
+}

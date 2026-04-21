@@ -7,9 +7,8 @@ class WebsocketService {
   static WebsocketService get websocketService =>
       _serviceInstance ??= WebsocketService._();
 
-  // Using echo server for testing, real websocket should be ws://localhost:8080
   static WebSocketChannel channel = WebSocketChannel.connect(
-    Uri.parse("wss://echo.websocket.org"),
+    Uri.parse("ws://localhost:8080"),
   );
 
   void dispose() {
