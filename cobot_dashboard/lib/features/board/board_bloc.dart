@@ -43,7 +43,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     ) {
       final msg = value.toString();
       if (fenDetector.hasMatch(msg)) {
-        print('[BoardBloc] FEN detected, adding FenEvent: ${msg.substring(0, msg.length.clamp(0, 40))}...');
+        log.fine('[BoardBloc] FEN detected, adding FenEvent: ${msg.substring(0, msg.length.clamp(0, 40))}...');
         add(FenEvent(fen: msg));
       }
     });
@@ -81,17 +81,17 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   }
 
   void _updateFen(FenEvent event, Emitter<BoardState> emit) {
-    print('[BoardBloc] _updateFen called with: ${event.fen.substring(0, event.fen.length.clamp(0, 50))}');
+    log.fine('_updateFen called with: ${event.fen.substring(0, event.fen.length.clamp(0, 50))}');
     try {
       final setup = Setup.parseFen(event.fen);
-      print('[BoardBloc] Setup parsed OK, turn=${setup.turn}');
+      log.fine('Setup parsed OK, turn=${setup.turn}');
       final newPosition = Chess.fromSetup(setup);
-      print('[BoardBloc] Position created OK, emitting state');
+      log.fine('Position created OK, emitting state');
       final boardFen = event.fen.split(' ').first;
       emit(state.copyWith(position: newPosition, fen: boardFen));
-      print('[BoardBloc] State emitted with boardFen: $boardFen');
+      log.fine('State emitted with boardFen: $boardFen');
     } catch (e, st) {
-      print('[BoardBloc] ERROR in _updateFen: $e\n$st');
+      log.shout('ERROR in _updateFen: $e\n$st');
     }
   }
 
