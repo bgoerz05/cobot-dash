@@ -10,7 +10,7 @@ class ControlRepo {
 
   static ControlRepo? _controlRepoInstance;
   ControlRepo._() {
-    _socketListener = WebsocketService.channel.stream.listen((final value) {
+    _socketListener = WebsocketService.stream.listen((final value) {
       addData(value);
       log.fine('Data recieved - $value');
     });

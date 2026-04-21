@@ -41,8 +41,10 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     _socketListener = ControlRepo.controlRepoInstance.channelStream.listen((
       final value,
     ) {
-      if (fenDetector.hasMatch(value)) {
-        add(FenEvent(fen: value));
+      final msg = value.toString();
+      if (fenDetector.hasMatch(msg)) {
+        print('[BoardBloc] FEN detected, adding FenEvent: ${msg.substring(0, msg.length.clamp(0, 40))}...');
+        add(FenEvent(fen: msg));
       }
     });
   }
@@ -58,7 +60,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     emit(
       state.copyWith(
         position: newPosition,
-        fen: newPosition.fen,
+        fen: newPosition.fen.split(' ').first,
         validMoves: makeLegalMoves(newPosition),
         sideToPlay: state.sideToPlay == Side.white ? Side.black : Side.white,
       ),
@@ -70,7 +72,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       state.copyWith(
         active: true,
         position: Chess.initial,
-        fen: Chess.initial.fen,
+        fen: Chess.initial.fen.split(' ').first,
         sideToPlay: Side.white,
         validMoves: makeLegalMoves(Chess.initial),
       ),
@@ -79,11 +81,17 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   }
 
   void _updateFen(FenEvent event, Emitter<BoardState> emit) {
+    print('[BoardBloc] _updateFen called with: ${event.fen.substring(0, event.fen.length.clamp(0, 50))}');
     try {
-      Position newPosition = Chess.fromSetup(Setup.parseFen(event.fen));
-      emit(state.copyWith(position: newPosition, fen: event.fen));
-    } on PositionSetupException {
-      log.shout('Invalid FEN string recieved!');
+      final setup = Setup.parseFen(event.fen);
+      print('[BoardBloc] Setup parsed OK, turn=${setup.turn}');
+      final newPosition = Chess.fromSetup(setup);
+      print('[BoardBloc] Position created OK, emitting state');
+      final boardFen = event.fen.split(' ').first;
+      emit(state.copyWith(position: newPosition, fen: boardFen));
+      print('[BoardBloc] State emitted with boardFen: $boardFen');
+    } catch (e, st) {
+      print('[BoardBloc] ERROR in _updateFen: $e\n$st');
     }
   }
 
