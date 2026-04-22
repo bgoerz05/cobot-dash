@@ -1,7 +1,11 @@
 ### Launching
+Debugging:
 1. Open VSCode
 2. Open the "cobot_dashboard" folder (should be bookmarked on the PC)
 3. Hit F5 or "start debugging" button.
+Updating release version (used in demo.launch.py):
+1. From VSCode, run `flutter run --release`.
+2. Close out of the window when it opens. (The new version will now automatically be run when the demo is launched.)
 
 ### General Structure
 Inside the `lib` folder there is:
