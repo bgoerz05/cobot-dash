@@ -43,7 +43,9 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     ) {
       final msg = value.toString();
       if (fenDetector.hasMatch(msg)) {
-        log.fine('[BoardBloc] FEN detected, adding FenEvent: ${msg.substring(0, msg.length.clamp(0, 40))}...');
+        log.fine(
+          '[BoardBloc] FEN detected, adding FenEvent: ${msg.substring(0, msg.length.clamp(0, 40))}...',
+        );
         add(FenEvent(fen: msg));
       }
     });
@@ -81,7 +83,9 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   }
 
   void _updateFen(FenEvent event, Emitter<BoardState> emit) {
-    log.fine('_updateFen called with: ${event.fen.substring(0, event.fen.length.clamp(0, 50))}');
+    log.fine(
+      '_updateFen called with: ${event.fen.substring(0, event.fen.length.clamp(0, 50))}',
+    );
     try {
       final setup = Setup.parseFen(event.fen);
       log.fine('Setup parsed OK, turn=${setup.turn}');
@@ -91,7 +95,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       emit(state.copyWith(position: newPosition, fen: boardFen));
       log.fine('State emitted with boardFen: $boardFen');
     } catch (e, st) {
-      log.shout('ERROR in _updateFen: $e\n$st');
+      log.shout('Error updating FEN: $e\n$st');
     }
   }
 
