@@ -1,6 +1,7 @@
 import 'package:cobot_dashboard/features/clock/clock_repo.dart';
 import 'package:cobot_dashboard/features/controls/control_repo.dart';
 import 'package:cobot_dashboard/services/websocket_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CobotControlPanel extends StatelessWidget {
@@ -36,7 +37,8 @@ class CobotControlPanel extends StatelessWidget {
                 },
                 child: Text("Switch Player"),
               ),
-              Card(
+              if (kDebugMode) 
+                Card(
                 child: Column(
                   children: [
                     Text("FOR DEBUGGING"),
