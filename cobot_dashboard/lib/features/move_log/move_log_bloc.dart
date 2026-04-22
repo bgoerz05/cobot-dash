@@ -4,12 +4,11 @@ import 'package:cobot_dashboard/features/clock/clock_repo.dart';
 import 'package:cobot_dashboard/features/move_log/move_log_event.dart';
 import 'package:cobot_dashboard/features/move_log/move_log_repo.dart';
 import 'package:cobot_dashboard/features/move_log/move_log_state.dart';
-import 'package:dartchess/dartchess.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MoveLogBloc extends Bloc<MoveLogEvent, MoveLogState> {
   late StreamSubscription<bool>? _starterListener;
-  late StreamSubscription<Move>? _moveListener;
+  late StreamSubscription<String>? _moveListener;
 
   MoveLogBloc() : super(MoveLogState()) {
     on<StartLogEvent>((event, emit) => _clearLog(event, emit));
@@ -36,12 +35,11 @@ class MoveLogBloc extends Bloc<MoveLogEvent, MoveLogState> {
   }
 
   void _clearLog(StartLogEvent event, Emitter emit) {
-    emit(state.copyWith(moves: const {}));
+    emit(state.copyWith(moves: const []));
   }
 
   void _addMove(AddMoveEvent event, Emitter emit) {
-    Set<String> moves = state.moves;
-    moves.add(event.move);
+    List<String> moves = state.moves + [event.move];
     emit(state.copyWith(moves: moves));
   }
 

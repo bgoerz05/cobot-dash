@@ -58,7 +58,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   void _playMove(MoveEvent event, Emitter<BoardState> emit) {
     Position newPosition = state.position.play(event.move);
     ClockRepository.clockRepositoryInstance.switchPlayer();
-    MoveLogRepository.moveLogRepoInstance.addMove(event.move);
+    MoveLogRepository.moveLogRepoInstance.addMove(newPosition.fen);
     emit(
       state.copyWith(
         position: newPosition,
@@ -92,6 +92,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       final newPosition = Chess.fromSetup(setup);
       log.fine('Position created OK, emitting state');
       final boardFen = event.fen.split(' ').first;
+      MoveLogRepository.moveLogRepoInstance.addMove(newPosition.fen);
       emit(state.copyWith(position: newPosition, fen: boardFen));
       log.fine('State emitted with boardFen: $boardFen');
     } catch (e, st) {

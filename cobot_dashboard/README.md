@@ -38,7 +38,7 @@ The `getFormattedTime` method converts the `Duration` object to a string useful 
 Currently primarily used to interact with other blocs/repos, to the extend of having nothing in its own bloc.
 However, its repo is used to connect the web socket service to the various widgets and blocs that use it. 
 ### Move Log
-Currently just a text list of the current game's moves in UCI format, which simply lists the starting and ending squares of the move. Uses a repo so that moves can be added from different blocs.
+Currently just a list of the FEN strings of the moves.
 
 ---
 For any further information, feel free to contact me at bgoerz05@gmail.com

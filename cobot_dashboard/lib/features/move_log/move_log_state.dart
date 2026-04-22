@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
 class MoveLogState extends Equatable {
-  final Set<String> moves;
+  final List<String> moves;
 
-  const MoveLogState({this.moves = const {}});
+  const MoveLogState({this.moves = const []});
 
-  MoveLogState copyWith({final Set<String>? moves}) {
+  MoveLogState copyWith({final List<String>? moves}) {
     return MoveLogState(moves: moves ?? this.moves);
   }
 
