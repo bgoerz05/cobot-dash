@@ -18,14 +18,14 @@ class DashHomePage extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(flex: 2, child: BoardPanel()),
-                Expanded(flex: 1, child: MoveLogPanel()),
+                Expanded(flex: 1, child: CobotControlPanel()),
               ],
             ),
           ),
           Expanded(
             child: Column(
               children: [
-                Expanded(flex: 2, child: CobotControlPanel()),
+                Expanded(flex: 2, child: MoveLogPanel()),
                 Expanded(flex: 1, child: ClockPanel()),
               ],
             ),

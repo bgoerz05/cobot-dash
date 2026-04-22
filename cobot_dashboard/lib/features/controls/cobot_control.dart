@@ -13,58 +13,61 @@ class CobotControlPanel extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).cardColor,
         appBar: AppBar(title: Text("Control Panel")),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextButton(
-                onPressed: () {
-                  ClockRepository.clockRepositoryInstance.start();
-                  WebsocketService.send('Start Game');
-                },
-                child: Text("Start Game"),
-              ),
-              TextButton(
-                onPressed: () {
-                  ClockRepository.clockRepositoryInstance.stop();
-                  WebsocketService.send('Stop Game');
-                },
-                child: Text("Stop Game"),
-              ),
-              TextButton(
-                onPressed: () {
-                  ClockRepository.clockRepositoryInstance.switchPlayer();
-                },
-                child: Text("Switch Player"),
-              ),
-              if (kDebugMode) 
-                Card(
-                child: Column(
-                  children: [
-                    Text("FOR DEBUGGING"),
-                    TextField(
-                      onSubmitted: (value) => WebsocketService.send(value),
-                      decoration: InputDecoration(
-                        labelText: 'Send to Channel.',
-                      ),
-                    ),
-                    Row(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    ClockRepository.clockRepositoryInstance.start();
+                    WebsocketService.send('Start Game');
+                  },
+                  child: Text(
+                    "Start Game",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    ClockRepository.clockRepositoryInstance.stop();
+                    WebsocketService.send('Stop Game');
+                  },
+                  child: Text(
+                    "Stop Game",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+                if (kDebugMode)
+                  Card(
+                    child: Column(
                       children: [
-                        Text('Websocket Response: '),
-                        StreamBuilder(
-                          stream: ControlRepo.controlRepoInstance.channelStream,
-                          builder: (context, snapshot) {
-                            return Text(
-                              snapshot.hasData ? '${snapshot.data}' : '',
-                            );
-                          },
+                        Text("FOR DEBUGGING"),
+                        TextField(
+                          onSubmitted: (value) => WebsocketService.send(value),
+                          decoration: InputDecoration(
+                            labelText: 'Send to Channel.',
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text('Websocket Response: '),
+                            StreamBuilder(
+                              stream:
+                                  ControlRepo.controlRepoInstance.channelStream,
+                              builder: (context, snapshot) {
+                                return Text(
+                                  snapshot.hasData ? '${snapshot.data}' : '',
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
