@@ -74,15 +74,17 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
   }
 
   void _tickWhite(TickWhiteEvent event, Emitter<ClockState> emit) {
-    return emit(
-      state.copyWith(whiteTimeLeft: state.whiteTimeLeft - Duration(seconds: 1)),
-    );
+    final next = state.whiteTimeLeft - const Duration(seconds: 1);
+    return emit(state.copyWith(
+      whiteTimeLeft: next.isNegative ? Duration.zero : next,
+    ));
   }
 
   void _tickBlack(TickBlackEvent event, Emitter<ClockState> emit) {
-    return emit(
-      state.copyWith(blackTimeLeft: state.blackTimeLeft - Duration(seconds: 1)),
-    );
+    final next = state.blackTimeLeft - const Duration(seconds: 1);
+    return emit(state.copyWith(
+      blackTimeLeft: next.isNegative ? Duration.zero : next,
+    ));
   }
 
   void _switchPlayer(SwitchPlayerEvent event, Emitter<ClockState> emit) {
@@ -90,9 +92,9 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
   }
 
   void _syncTime(SyncTimeEvent event, Emitter<ClockState> emit) {
-    clockUpdater?.cancel();
-    clockUpdater = null;
-    if (event.running) {
+    // Only restart the timer when running state changes, not on every sync.
+    if (event.running && !state.running) {
+      clockUpdater?.cancel();
       clockUpdater = Timer.periodic(const Duration(seconds: 1), (final Timer timer) {
         if (state.whiteToPlay) {
           add(TickWhiteEvent());
@@ -100,10 +102,42 @@ class ClockBloc extends Bloc<ClockEvent, ClockState> {
           add(TickBlackEvent());
         }
       });
+    } else if (!event.running) {
+      clockUpdater?.cancel();
+      clockUpdater = null;
     }
+
+    // Anti-oscillation: the bridge syncs at 1 Hz and can send a value 1 s ahead
+    // of the GUI's own countdown, causing +1/-1 flicker. To prevent this, take
+    // min(physical, GUI) — but ONLY for the active side (the one currently
+    // counting down). The inactive side always takes the physical value so that
+    // per-move time increments are applied immediately.
+    // On a turn change or clock stop, snap both sides fully to the physical clock.
+    final sameContext = event.running && state.running &&
+        event.whiteToPlay == state.whiteToPlay;
+
+    final Duration whiteTime;
+    final Duration blackTime;
+    if (!sameContext) {
+      whiteTime = event.whiteTimeLeft;
+      blackTime = event.blackTimeLeft;
+    } else if (event.whiteToPlay) {
+      // White is active: anti-oscillate white, sync black freely (may have increment).
+      whiteTime = event.whiteTimeLeft < state.whiteTimeLeft
+          ? event.whiteTimeLeft
+          : state.whiteTimeLeft;
+      blackTime = event.blackTimeLeft;
+    } else {
+      // Black is active: anti-oscillate black, sync white freely (may have increment).
+      whiteTime = event.whiteTimeLeft;
+      blackTime = event.blackTimeLeft < state.blackTimeLeft
+          ? event.blackTimeLeft
+          : state.blackTimeLeft;
+    }
+
     return emit(state.copyWith(
-      whiteTimeLeft: event.whiteTimeLeft,
-      blackTimeLeft: event.blackTimeLeft,
+      whiteTimeLeft: whiteTime,
+      blackTimeLeft: blackTime,
       whiteToPlay: event.whiteToPlay,
       running: event.running,
     ));
