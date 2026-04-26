@@ -1,4 +1,3 @@
-import 'package:dartchess/dartchess.dart';
 import 'package:equatable/equatable.dart';
 
 class MoveLogEvent extends Equatable {
@@ -11,7 +10,7 @@ class MoveLogEvent extends Equatable {
 class StartLogEvent extends MoveLogEvent {}
 
 class AddMoveEvent extends MoveLogEvent {
-  final Move move;
+  final String move;
   const AddMoveEvent({required this.move});
 
   @override

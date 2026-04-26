@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:dartchess/dartchess.dart';
-
 class MoveLogRepository {
   static MoveLogRepository? _moveLogRepositoryInstance;
   MoveLogRepository._();
@@ -9,10 +7,11 @@ class MoveLogRepository {
   static MoveLogRepository get moveLogRepoInstance =>
       _moveLogRepositoryInstance ??= MoveLogRepository._();
 
-  final StreamController<Move> _newMoves = StreamController<Move>.broadcast();
-  Stream<Move> get newMoveStream => _newMoves.stream;
+  final StreamController<String> _newMoves =
+      StreamController<String>.broadcast();
+  Stream<String> get newMoveStream => _newMoves.stream;
 
-  Future<void> addMove(Move move) async {
+  Future<void> addMove(String move) async {
     _newMoves.add(move);
   }
 
